@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: raw_ons
+    schema: RAW_ONS
+    tables:
+      - name: BALANCO_ENERGIA_SUBSISTEMA_2025
+      - name: DISPONIBILIDADE_USINA_GERAL
+      - name: EAR_DIARIO_SUBSISTEMA_2025
+      - name: ENA_DIARIO_SUBSISTEMA_2025
+
