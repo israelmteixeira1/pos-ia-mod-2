@@ -1,5 +1,18 @@
+dags/__pycache__/
+plugins/__pycache__/
+*.pyc
+*.pyo
+__pycache__/
+.airflowignore
 
+logs/
 target/
 dbt_packages/
-logs/
+
+.DS_Store
+Thumbs.db
+*.log
+
+.vscode/
+.idea/
 .venv
