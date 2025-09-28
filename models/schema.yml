@@ -8,4 +8,5 @@ sources:
       - name: DISPONIBILIDADE_USINA_GERAL
       - name: EAR_DIARIO_SUBSISTEMA_2025
       - name: ENA_DIARIO_SUBSISTEMA_2025
+      - name: INMET_PROCESSED_DATA
 

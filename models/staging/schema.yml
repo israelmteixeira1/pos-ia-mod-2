@@ -1,0 +1,124 @@
+version: 2
+
+models:
+  - name: STG_BALANCO_ENERGIA_SUBSISTEMA
+    description: "Modelo de staging para o balanço de energia por subsistema no ano de 2025."
+    tests:
+      - not_null:
+          column_name: ID_SUBSISTEMA
+      - not_null:
+          column_name: DIN_INSTANTE
+      - unique:
+          column_name: ID_SUBSISTEMA
+      - unique:
+          column_name: DIN_INSTANTE
+      - dbt_utils.expression_is_true:
+          expression: "VAL_CARGA >= 0"
+      - dbt_utils.expression_is_true:
+          expression: "VAL_GERSOLAR >= 0"
+      - dbt_utils.expression_is_true:
+          expression: "VAL_GEREOLICA >= 0"
+      - dbt_utils.expression_is_true:
+          expression: "VAL_GERTERMICA >= 0"
+      - dbt_utils.expression_is_true:
+          expression: "VAL_GERHIDRAULICA >= 0"
+
+  - name: STG_DISPONIBILIDADE_USINA
+    description: "Modelo de staging para disponibilidade das usinas."
+    tests:
+      - not_null:
+          column_name: ID_ONS
+      - not_null:
+          column_name: CEG
+      - not_null:
+          column_name: DIN_INSTANTE
+      - not_null:
+          column_name: NOM_USINA
+      - dbt_utils.expression_is_true:
+          expression: "VAL_POTENCIAINSTALADA >= 0"
+      - dbt_utils.expression_is_true:
+          expression: "VAL_DISPOPERACIONAL >= 0"
+
+  - name: STG_EAR_DIARIO_SUBSISTEMA
+    description: "Modelo de staging para EAR diário por subsistema."
+    tests:
+      - not_null:
+          column_name: ID_SUBSISTEMA
+      - not_null:
+          column_name: EAR_DATA
+      - dbt_utils.expression_is_true:
+          expression: "EAR_VERIF_SUBSISTEMA_MWMES >= 0"
+      - dbt_utils.expression_is_true:
+          expression: "EAR_VERIF_SUBSISTEMA_PERCENTUAL BETWEEN 0 AND 100"
+
+  - name: STG_ENA_DIARIO_SUBSISTEMA
+    description: "Modelo de staging para ENA diário por subsistema."
+    tests:
+      - not_null:
+          column_name: ID_SUBSISTEMA
+      - not_null:
+          column_name: ENA_DATA
+      - dbt_utils.expression_is_true:
+          expression: "ENA_BRUTA_REGIAO_MWMED >= 0"
+      - dbt_utils.expression_is_true:
+          expression: "ENA_ARMAZENAVEL_REGIAO_PERCENTUALMLT BETWEEN 0 AND 100"
+
+  - name: stg_inmet_data
+    description: |
+      View de staging para dados INMET processados.
+      Converte tipos de VARCHAR para DATE e FLOAT, preenchendo NULL com zero.
+    columns:
+      - name: regiao
+        description: Código da região (INMET)
+        tests:
+          - not_null
+      - name: uf
+        description: Unidade Federativa
+        tests:
+          - not_null
+      - name: estacao
+        description: Nome da estação meteorológica
+        tests:
+          - not_null
+      - name: data_medicao
+        description: Data da medição convertida para DATE
+        tests:
+          - not_null
+      - name: hora_utc
+        description: Hora da medição em UTC
+        tests:
+          - not_null
+      - name: precipitacao_mm
+        description: Precipitação total horária (mm)
+      - name: pressao_atmosferica_mb
+        description: Pressão atmosférica ao nível da estação (mB)
+      - name: pressao_atmosferica_max_mb
+        description: Pressão atmosférica máxima na hora anterior (mB)
+      - name: pressao_atmosferica_min_mb
+        description: Pressão atmosférica mínima na hora anterior (mB)
+      - name: radiacao_global_kj_m2
+        description: Radiação global (Kj/m²)
+      - name: temperatura_ar_c
+        description: Temperatura do ar – bulbo seco (°C)
+      - name: temperatura_ponto_orvalho_c
+        description: Temperatura do ponto de orvalho (°C)
+      - name: temperatura_maxima_c
+        description: Temperatura máxima na hora anterior (°C)
+      - name: temperatura_minima_c
+        description: Temperatura mínima na hora anterior (°C)
+      - name: temperatura_orvalho_max_c
+        description: Temperatura de orvalho máxima na hora anterior (°C)
+      - name: temperatura_orvalho_min_c
+        description: Temperatura de orvalho mínima na hora anterior (°C)
+      - name: umidade_relativa_max_pct
+        description: Umidade relativa máxima na hora anterior (%)
+      - name: umidade_relativa_min_pct
+        description: Umidade relativa mínima na hora anterior (%)
+      - name: umidade_relativa_pct
+        description: Umidade relativa do ar – horária (%)
+      - name: vento_direcao_graus
+        description: Direção do vento (graus)
+      - name: vento_rajada_max_ms
+        description: Rajada máxima do vento (m/s)
+      - name: vento_velocidade_ms
+        description: Velocidade horária do vento (m/s)
