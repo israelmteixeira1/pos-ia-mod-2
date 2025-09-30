@@ -3,6 +3,7 @@
     materialized='table'
 ) }}
 
+
 with base_dados_ml as (
     select
         b.data_referencia, b.id_subsistema, b.nom_subsistema,
@@ -28,30 +29,29 @@ with base_dados_ml as (
     ) c
       on b.data_referencia = c.data_referencia
 ),
-quantis as (
+quantis_risco as (
     select
-        percentile_cont(0.5) within group (order by intercambio_mw_medio_dia) as prc50,
-        percentile_cont(0.8) within group (order by intercambio_mw_medio_dia) as prc80,
-        percentile_cont(0.9) within group (order by intercambio_mw_medio_dia) as prc90
+        percentile_cont(0.20) within group (order by intercambio_mw_medio_dia) as limite_risco_alto,
+        percentile_cont(0.50) within group (order by intercambio_mw_medio_dia) as limite_risco_baixo,
+        percentile_cont(0.90) within group (order by intercambio_mw_medio_dia) as prc90
     from base_dados_ml
 ),
 dados_com_classificacao as (
     select
         m.*,
-        q.prc50, q.prc80, q.prc90,
+        q.limite_risco_alto, q.limite_risco_baixo, q.prc90,
         case
-          when intercambio_mw_medio_dia >= q.prc80 then 'Alto'
-          when intercambio_mw_medio_dia > q.prc50 and intercambio_mw_medio_dia < q.prc80 then 'Medio'
+          when intercambio_mw_medio_dia <= q.limite_risco_alto then 'Alto'
+          when intercambio_mw_medio_dia > q.limite_risco_alto and intercambio_mw_medio_dia <= q.limite_risco_baixo then 'Medio'
           else 'Baixo'
         end as nivel_risco_categoria,
         case
-          when intercambio_mw_medio_dia >= q.prc90 then 100
-          when intercambio_mw_medio_dia >= q.prc80 then 80
-          when intercambio_mw_medio_dia >= q.prc50 then 50
+          when intercambio_mw_medio_dia <= q.limite_risco_alto then 100
+          when intercambio_mw_medio_dia > q.limite_risco_alto and intercambio_mw_medio_dia <= q.limite_risco_baixo then 50
           else 20
         end as score_risco_numerico,
         percent_rank() over (order by intercambio_mw_medio_dia) * 100 as intercambio_percentil_atual
-    from base_dados_ml m cross join quantis q
+    from base_dados_ml m cross join quantis_risco q
 ),
 dados_com_features as (
     select
@@ -65,9 +65,12 @@ dados_com_features as (
     from dados_com_classificacao
 )
 
+
 select
     md5(to_varchar(data_referencia) || '|' || id_subsistema) as sk_fato_risco,
-    data_referencia, id_subsistema, nivel_risco_categoria, score_risco_numerico, intercambio_percentil_atual,
+    data_referencia, id_subsistema, nom_subsistema, nivel_risco_categoria, score_risco_numerico, intercambio_percentil_atual,
+    intercambio_mw_medio_dia, limite_risco_alto, limite_risco_baixo,
+    ger_hidraulica_mwh_dia, ger_termica_mwh_dia, ger_eolica_mwh_dia, ger_solar_mwh_dia,
     carga_mwh_dia, ear_percentual, ena_bruta_percentual_mlt, disp_sincronizada_mw,
     temperatura_media_dia_c, precipitacao_total_dia_mm,
     carga_d_menos_1, ear_d_menos_1, ena_d_menos_1, disp_d_menos_1, temp_media_max_7d, precip_soma_7d,
