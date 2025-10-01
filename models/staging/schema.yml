@@ -122,3 +122,18 @@ models:
         description: Rajada máxima do vento (m/s)
       - name: vento_velocidade_ms
         description: Velocidade horária do vento (m/s)
+
+  - name: stg_geracao_termica_despacho
+    tests:
+      - not_null:
+          column_name: data_instante
+      - not_null:
+          column_name: nome_usina
+      - not_null:
+          column_name: nome_subsistema
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "ano_dados IN (2024, 2025)"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "mes_dados BETWEEN 1 AND 12"
