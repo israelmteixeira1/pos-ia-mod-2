@@ -12,6 +12,8 @@ sources:
       - name: EAR_DIARIO_SUBSISTEMA_2024
       - name: EAR_DIARIO_SUBSISTEMA_2023
       - name: ENA_DIARIO_SUBSISTEMA_2025
+      - name: ENA_DIARIO_SUBSISTEMA_2024
+      - name: ENA_DIARIO_SUBSISTEMA_2023
       - name: INMET_PROCESSED_DATA
 
       # Tabelas de 2024
