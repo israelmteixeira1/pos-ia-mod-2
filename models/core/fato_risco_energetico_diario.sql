@@ -28,6 +28,7 @@ with base_dados_ml as (
       group by data_referencia
     ) c
       on b.data_referencia = c.data_referencia
+    where b.id_subsistema = 'SE' 
 ),
 quantis_risco as (
     select
@@ -41,17 +42,26 @@ dados_com_classificacao as (
         m.*,
         q.limite_risco_alto, q.limite_risco_baixo, q.prc90,
         case
+          -- Risco ALTO: intercâmbio <= percentil 20 (mais negativo/déficit)
           when intercambio_mw_medio_dia <= q.limite_risco_alto then 'Alto'
-          when intercambio_mw_medio_dia > q.limite_risco_alto and intercambio_mw_medio_dia <= q.limite_risco_baixo then 'Medio'
+          -- Risco MÉDIO: entre percentil 20 e 50
+          when intercambio_mw_medio_dia > q.limite_risco_alto 
+               and intercambio_mw_medio_dia <= q.limite_risco_baixo then 'Medio'
+          -- Risco BAIXO: acima da mediana (menos negativo ou positivo/superávit)
           else 'Baixo'
         end as nivel_risco_categoria,
         case
           when intercambio_mw_medio_dia <= q.limite_risco_alto then 100
-          when intercambio_mw_medio_dia > q.limite_risco_alto and intercambio_mw_medio_dia <= q.limite_risco_baixo then 50
+          when intercambio_mw_medio_dia > q.limite_risco_alto 
+               and intercambio_mw_medio_dia <= q.limite_risco_baixo then 50
           else 20
         end as score_risco_numerico,
+        
+        -- Percentil de intercâmbio (quanto mais baixo, mais crítico)
         percent_rank() over (order by intercambio_mw_medio_dia) * 100 as intercambio_percentil_atual
-    from base_dados_ml m cross join quantis_risco q
+        
+    from base_dados_ml m 
+    cross join quantis_risco q
 ),
 dados_com_features as (
     select
@@ -60,8 +70,20 @@ dados_com_features as (
         lag(ear_percentual, 1) over (partition by id_subsistema order by data_referencia) as ear_d_menos_1,
         lag(ena_bruta_percentual_mlt, 1) over (partition by id_subsistema order by data_referencia) as ena_d_menos_1,
         lag(disp_sincronizada_mw, 1) over (partition by id_subsistema order by data_referencia) as disp_d_menos_1,
-        avg(temperatura_media_dia_c) over (partition by id_subsistema order by data_referencia rows between 7 preceding and 1 preceding) as temp_media_max_7d,
-        sum(precipitacao_total_dia_mm) over (partition by id_subsistema order by data_referencia rows between 7 preceding and 1 preceding) as precip_soma_7d
+        
+        -- Features de janela temporal (7 dias)
+        avg(temperatura_media_dia_c) over (
+            partition by id_subsistema 
+            order by data_referencia 
+            rows between 7 preceding and 1 preceding
+        ) as temp_media_max_7d,
+        
+        sum(precipitacao_total_dia_mm) over (
+            partition by id_subsistema 
+            order by data_referencia 
+            rows between 7 preceding and 1 preceding
+        ) as precip_soma_7d
+        
     from dados_com_classificacao
 )
 
