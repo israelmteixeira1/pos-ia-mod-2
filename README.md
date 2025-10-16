@@ -61,8 +61,8 @@ ons_ml:
     dev:
       type: snowflake
       account: zmjnstx-ey20159
-      user: awsposifif
-      password: 'Aws@@ifg202522'
+      user: -
+      password: -
       role: ACCOUNTADMIN
       database: LAB_ONS
       warehouse: LAB_WH
