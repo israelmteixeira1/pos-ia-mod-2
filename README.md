@@ -61,9 +61,9 @@ ons_ml:
   outputs:
     dev:
       type: snowflake
-      account: zmjnstx-ey20159
-      user: 
-      password: 
+      account: -
+      user: -
+      password: -
       role: ACCOUNTADMIN
       database: LAB_ONS
       warehouse: LAB_WH
