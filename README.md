@@ -97,31 +97,23 @@ All checks passed!
 
 ## Estrutura do Projeto
 
-pos-ia-mod-2/
-│
-├── .venv/
-│
-├── dags/
-│
-├── dbt_packages/
-│
-├── macros/
-│
-├── models/
-│   ├── staging/
-│   └── core/
-│
-├── .gitignore
-│
-├── dbt_project.yml
-│
-├── package-lock.yml
-│
-├── packages.yml
-│
-└── README.md
+## Estrutura do Projeto
 
+**Diretórios:**
+- `.venv/` - Ambiente virtual Python (não versionado)
+- `dags/` - DAGs do Airflow para orquestração
+- `dbt_packages/` - Pacotes dbt instalados (não versionado)
+- `macros/` - Macros SQL reutilizáveis
+- `models/` - Modelos dbt
+  - `staging/` - Camada de staging (dados brutos normalizados)
+  - `core/` - Modelos finais (fatos e dimensões)
 
+**Arquivos:**
+- `.gitignore` - Arquivos ignorados pelo Git
+- `dbt_project.yml` - Configuração principal do projeto
+- `package-lock.yml` - Lock de versões de pacotes
+- `packages.yml` - Dependências de pacotes dbt
+- `README.md` - Este arquivo
 
 
 
