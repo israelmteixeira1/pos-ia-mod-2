@@ -98,18 +98,29 @@ All checks passed!
 ## Estrutura do Projeto
 
 pos-ia-mod-2/
+│
 ├── .venv/
+│
 ├── dags/
+│
 ├── dbt_packages/
+│
 ├── macros/
+│
 ├── models/
 │   ├── staging/
 │   └── core/
+│
 ├── .gitignore
+│
 ├── dbt_project.yml
+│
 ├── package-lock.yml
+│
 ├── packages.yml
+│
 └── README.md
+
 
 
 
