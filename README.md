@@ -55,6 +55,7 @@ nano ~/.dbt/profiles.yml
 
 #### 5.3. Cole essas informações no arquivo profiles.yml
 
+```
 ons_ml:
   target: dev
   outputs:
@@ -68,6 +69,8 @@ ons_ml:
       warehouse: LAB_WH
       schema: STAGING_ONS
       threads: 4
+```
+
 
       
 #### 5.4. Salve o arquivo
