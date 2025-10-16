@@ -61,24 +61,21 @@ ons_ml:
     dev:
       type: snowflake
       account: zmjnstx-ey20159
-      user: -
-      password: -
+      user: 
+      password: 
       role: ACCOUNTADMIN
       database: LAB_ONS
       warehouse: LAB_WH
       schema: STAGING_ONS
       threads: 4
+
       
 #### 5.4. Salve o arquivo
 
-**No nano (Linux/macOS):**
 - Pressione `Ctrl + X`
 - Pressione `Y` para confirmar
 - Pressione `Enter`
 
-**No Notepad (Windows):**
-- Vá em Arquivo → Salvar
-- Feche o Notepad
 
 #### 5.5. Verifique se o arquivo foi criado corretamente
 
