@@ -97,8 +97,6 @@ All checks passed!
 
 ## Estrutura do Projeto
 
-## Estrutura do Projeto
-
 **Diretórios:**
 - `.venv/` - Ambiente virtual Python (não versionado)
 - `dags/` - DAGs do Airflow para orquestração
@@ -140,7 +138,9 @@ Limpar arquivos compilados
 dbt clean
 
 Executar todos os testes
-dbt test
+dbt test  
+
+
 
 
 # Projeto ONS - Machine Learning (Streamlit)
