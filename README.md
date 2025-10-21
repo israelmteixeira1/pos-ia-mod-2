@@ -1,4 +1,4 @@
-# Projeto ONS Machine Learning - dbt + Snowflake
+# Projeto ONS - dbt + Snowflake
 
 ## Visão Geral
 
@@ -141,3 +141,53 @@ dbt clean
 
 Executar todos os testes
 dbt test
+
+
+# Projeto ONS - Machine Learning (Streamlit)
+
+## Visão geral
+Aplicativo web em Streamlit para classificar o risco de déficit energético em três níveis (*Baixo*, *Médio*, *Alto*) usando um modelo **Random Forest** já treinado. O app:
+- Carrega o modelo e a lista de features;
+- Lê um CSV demonstrativo;
+- Alinha as colunas esperadas e executa a inferência;
+- Exibe o nível de risco e recomendações de ação.
+
+## Estrutura do projeto
+```
+.
+├─ app.py
+├─ requirements.txt
+├─ modelo_RandomForest.joblib
+├─ features.json
+└─ df_demo.csv
+```
+
+## Pré-requisitos
+- **Python** 3.9–3.12
+
+## Instalação
+Crie um ambiente virtual e instale as dependências:
+```bash
+python -m venv .venv
+# Linux/macOS
+source .venv/bin/activate
+# Windows (PowerShell)
+.venv\Scripts\Activate.ps1
+
+pip install -r requirements.txt
+```
+
+## Execução
+Inicie o aplicativo:
+```bash
+streamlit run app.py
+```
+O navegador abrirá em `http://localhost:8501`. O painel lateral mostra o status de **carregamento do modelo**.
+
+
+## Como usar
+1. Verifique no **sidebar** se o modelo carregou com sucesso.
+2. Clique em **“▶️ Prever com base em D-1”**.
+3. Serão exibidos: **Risco predito** (*Baixo*, *Médio*, *Alto*) e o **playbook** correspondente.
+
+> Mapeamento de rótulos: `Baixo → 0`, `Medio → 1`, `Alto → 2`.
